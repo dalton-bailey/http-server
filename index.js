@@ -1,23 +1,15 @@
-const path = require('path')
-
-const express = require('express')
-const bodyParser = require('body-parser')
+import express from 'express'
+import { apiRouter } from './routes/api.js'
 
 const app = express()
+const port = process.env.PORT || 5000
 
-const port = 5000
+app.use(express.static('public'))
 
-const adminRoutes = require('./routes/admin')
-const shopRoutes = require('./routes/shop')
-
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/admin', adminRoutes)
-app.use(shopRoutes)
+app.use('/api', apiRouter)
 
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
+    res.status(404).send('<h1>Page not found </h1>')
 })
 
 app.listen(port, () => {
